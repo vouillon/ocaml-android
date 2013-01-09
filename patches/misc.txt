@@ -1,0 +1,18 @@
+--- stdlib/Makefile~
++++ stdlib/Makefile
+@@ -51,13 +51,13 @@
+ 	  $(BYTECC) $(BYTECCCOMPOPTS) $(BYTECCLINKOPTS) \
+ 	            -DRUNTIME_NAME='"$(BINDIR)/ocamlrun"' \
+ 	            header.c -o tmpheader$(EXE) && \
+-	  strip tmpheader$(EXE) && \
++	  arm-linux-androideabi-strip tmpheader$(EXE) && \
+ 	  mv tmpheader$(EXE) camlheader && \
+ 	  cp camlheader camlheader_ur && \
+ 	  $(BYTECC) $(BYTECCCOMPOPTS) $(BYTECCLINKOPTS) \
+ 	            -DRUNTIME_NAME='"$(BINDIR)/ocamlrund"' \
+ 	            header.c -o tmpheader$(EXE) && \
+-	  strip tmpheader$(EXE) && \
++	  arm-linux-androideabi-strip tmpheader$(EXE) && \
+ 	  mv tmpheader$(EXE) camlheaderd; \
+ 	fi
+ 

@@ -1,0 +1,41 @@
+--- asmrun/signals_osdep.h~
++++ asmrun/signals_osdep.h
+@@ -61,7 +61,7 @@
+ 
+ /****************** ARM, Linux */
+ 
+-#elif defined(TARGET_arm) && (defined(SYS_linux_eabi) || defined(SYS_linux_eabihf))
++#elif defined(TARGET_arm) && (defined(SYS_linux_eabi) || defined(SYS_linux_eabihf)) && !defined(__ANDROID__)
+ 
+   #include <sys/ucontext.h>
+ 
+--- otherlibs/unix/getpw.c~
++++ otherlibs/unix/getpw.c
+@@ -29,7 +29,7 @@
+   Begin_roots5 (name, passwd, gecos, dir, shell);
+     name = copy_string(entry->pw_name);
+     passwd = copy_string(entry->pw_passwd);
+-#ifndef __BEOS__
++#if !defined(__BEOS__) && !defined(__ANDROID__)
+     gecos = copy_string(entry->pw_gecos);
+ #else
+     gecos = copy_string("");
+--- otherlibs/unix/termios.c~
++++ otherlibs/unix/termios.c
+@@ -265,11 +265,16 @@
+   return Val_unit;
+ }
+ 
++#if defined(__ANDROID__)
++CAMLprim value unix_tcdrain(value fd)
++{ invalid_argument("tcdrain not implemented"); }
++#else
+ CAMLprim value unix_tcdrain(value fd)
+ {
+   if (tcdrain(Int_val(fd)) == -1) uerror("tcdrain", Nothing);
+   return Val_unit;
+ }
++#endif
+ 
+ static int queue_flag_table[] = {
+   TCIFLUSH, TCOFLUSH, TCIOFLUSH
