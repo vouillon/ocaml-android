@@ -1,0 +1,10 @@
+
+On a 64bit Debian or Ubuntu installation, you need to install
+package gcc-multilib.
+
+Follow the following steps to compile:
+- Download the Android NDK and the OCaml source code
+- Edit Makefile.config
+- Run "make".
+
+Binaries will be placed in BINDIR, prefixed by 'arm-linux-androideabi-'.

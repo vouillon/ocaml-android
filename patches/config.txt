@@ -1,27 +1,25 @@
 --- config/Makefile
 +++ config/Makefile
-@@ -5,10 +5,11 @@
+@@ -5,9 +5,10 @@
  STUBLIBDIR=$(LIBDIR)/stublibs
  MANDIR=$(PREFIX)/man
  MANEXT=1
 -RANLIB=ranlib
 -RANLIBCMD=ranlib
 -ARCMD=ar
--SHARPBANGSCRIPTS=true
 +SYSROOT=ANDROID_NDK/platforms/android-14/arch-arm
-+RANLIB=arm-linux-androideabi-ranlib
-+RANLIBCMD=arm-linux-androideabi-ranlib
-+ARCMD=arm-linux-androideabi-ar
-+SHARPBANGSCRIPTS=false
++RANLIB=ANDROID_PATH/arm-linux-androideabi-ranlib
++RANLIBCMD=ANDROID_PATH/arm-linux-androideabi-ranlib
++ARCMD=ANDROID_PATH/arm-linux-androideabi-ar
+ SHARPBANGSCRIPTS=true
  BNG_ARCH=generic
  BNG_ASM_LEVEL=0
- PTHREAD_LINK=
 @@ -17,7 +18,7 @@
  TK_DEFS=
  TK_LINK=
  LIBBFD_LINK=
 -BYTECC=gcc -m32
-+BYTECC=arm-linux-androideabi-gcc --sysroot $(SYSROOT)
++BYTECC=ANDROID_PATH/arm-linux-androideabi-gcc --sysroot $(SYSROOT)
  BYTECCCOMPOPTS=-fno-defer-pop -Wall -D_FILE_OFFSET_BITS=64
  BYTECCLINKOPTS=
  BYTECCLIBS= -lm  -ldl  
@@ -31,13 +29,13 @@
  ### How to build a static library
 -MKLIB=ar rc $(1) $(2); ranlib $(1)
 -#ml let mklib out files opts = Printf.sprintf "ar rc %s %s %s; ranlib %s" out opts files out;;
-+MKLIB=arm-linux-androideabi-ar rc $(1) $(2); arm-linux-androideabi-ranlib $(1)
-+#ml let mklib out files opts = Printf.sprintf "arm-linux-androideabi-ar rc %s %s %s; arm-linux-androideabi-ranlib %s" out opts files out;;
++MKLIB=ANDROID_PATH/arm-linux-androideabi-ar rc $(1) $(2); ANDROID_PATH/arm-linux-androideabi-ranlib $(1)
++#ml let mklib out files opts = Printf.sprintf "ANDROID_PATH/arm-linux-androideabi-ar rc %s %s %s; ANDROID_PATH/arm-linux-androideabi-ranlib %s" out opts files out;;
  ARCH=arm
  MODEL=armv5te
  SYSTEM=linux_eabi
 -NATIVECC=gcc -m32
-+NATIVECC=arm-linux-androideabi-gcc --sysroot $(SYSROOT)
++NATIVECC=ANDROID_PATH/arm-linux-androideabi-gcc --sysroot $(SYSROOT)
  NATIVECCCOMPOPTS=-Wall -D_FILE_OFFSET_BITS=64
  NATIVECCPROFOPTS=-Wall -D_FILE_OFFSET_BITS=64
  NATIVECCLINKOPTS=
@@ -45,8 +43,8 @@
  NATIVECCLIBS= -lm  -ldl
 -ASM=as --32
 -ASPP=gcc -m32 -c
-+ASM=arm-linux-androideabi-as
-+ASPP=arm-linux-androideabi-gcc -c --sysroot $(SYSROOT)
++ASM=ANDROID_PATH/arm-linux-androideabi-as
++ASPP=ANDROID_PATH/arm-linux-androideabi-gcc -c --sysroot $(SYSROOT)
  ASPPPROFFLAGS=-DPROFILING
  PROFILING=prof
  DYNLINKOPTS= -ldl

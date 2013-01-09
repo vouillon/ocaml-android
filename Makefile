@@ -5,7 +5,8 @@ SRC = ocaml
 
 ########################################
 
-export PATH := $(ANDROID_NDK)/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/bin:$(PATH)
+ARCH=$(shell uname | tr A-Z a-z)
+ANDROID_PATH = $(ANDROID_NDK)/toolchains/arm-linux-androideabi-4.7/prebuilt/$(ARCH)-x86/bin
 
 CORE_OTHER_LIBS = unix str num dynlink
 
@@ -25,7 +26,9 @@ stamp-build: stamp-prepare
 stamp-prepare: stamp-core
 	set -e; for p in patches/*.txt; do \
 	(cd $(SRC) && \
-	 sed -e 's%ANDROID_NDK%$(ANDROID_NDK)%' ../$$p | patch -p 0); \
+	 sed -e 's%ANDROID_NDK%$(ANDROID_NDK)%' \
+	     -e 's%ANDROID_PATH%$(ANDROID_PATH)%g' ../$$p | \
+	 patch -p 0); \
 	done
 	cd $(SRC) && rm ocaml byterun/*.o
 	cd $(SRC) && make -C stdlib clean
@@ -54,6 +57,14 @@ stamp-core: stamp-configure
 	touch stamp-core
 
 stamp-copy:
+	@if ! [ -d $(OCAML_SRC)/byterun ]; then \
+	  echo Error: OCaml sources not found. Check OCAML_SRC variable.; \
+	  exit 1; \
+	fi
+	@if ! [ -d $(ANDROID_PATH) ]; then \
+	  echo Error: Android NDK not found. Check ANDROID_NDK variable.; \
+	  exit 1; \
+	fi
 	cp -a $(OCAML_SRC) $(SRC)
 	touch stamp-copy
 
