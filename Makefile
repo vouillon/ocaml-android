@@ -1,6 +1,9 @@
 
 include Makefile.config
 
+# Do not export config variables to sub-make instances.
+unexport BINDIR PREFIX
+
 SRC = ocaml-src
 
 ARCH=$(shell uname | tr A-Z a-z)
