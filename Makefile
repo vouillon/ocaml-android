@@ -1,9 +1,6 @@
 
 include Makefile.config
 
-# Do not export config variables to sub-make instances.
-unexport BINDIR PREFIX
-
 SRC = ocaml-src
 
 ARCH=$(shell uname | tr A-Z a-z)
@@ -16,14 +13,14 @@ all: stamp-install
 stamp-install: stamp-build
 # Install the compiler
 	cd $(SRC) && make install
-# Put links to binaries in $BINDIR
-	for i in $(PREFIX)/bin/*; do \
-	  ln -sf $$i $(BINDIR)/arm-linux-androideabi-`basename $$i`; \
+# Put links to binaries in $ANDROID_BINDIR
+	for i in $(ANDROID_PREFIX)/bin/*; do \
+	  ln -sf $$i $(ANDROID_BINDIR)/arm-linux-androideabi-`basename $$i`; \
 	done
 # Install the Android ocamlrun binary
-	mkdir -p $(PREFIX)/arm-linux-androideabi/bin
+	mkdir -p $(ANDROID_PREFIX)/arm-linux-androideabi/bin
 	cd $(SRC) && \
-	cp byterun/ocamlrun.target $(PREFIX)/arm-linux-androideabi/bin/ocamlrun
+	cp byterun/ocamlrun.target $(ANDROID_PREFIX)/arm-linux-androideabi/bin/ocamlrun
 	touch stamp-install
 
 stamp-build: stamp-runtime
@@ -77,7 +74,7 @@ stamp-core: stamp-configure
 stamp-configure: stamp-copy
 # Configuration...
 	cd $(SRC) && \
-	./configure -prefix $(PREFIX) -host armv5te-unknown-linux-gnueabi \
+	./configure -prefix $(ANDROID_PREFIX) -host armv5te-unknown-linux-gnueabi \
 		-cc "gcc -m32" -as "as --32" -aspp "gcc -m32 -c" \
 	 	-no-shared-libs -no-pthread
 	touch stamp-configure
