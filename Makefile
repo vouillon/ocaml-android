@@ -29,8 +29,6 @@ stamp-build: stamp-runtime
 # Compile the libraries for Android
 	cd $(SRC) && make coreall opt-core otherlibraries otherlibrariesopt
 	cd $(SRC) && make ocamltoolsopt
-# Restore file memory.h 
-	cd $(SRC) && mv byterun/memry.h byterun/memory.h
 	touch stamp-build
 
 stamp-runtime: stamp-prepare
@@ -57,13 +55,6 @@ stamp-prepare: stamp-core
 	for i in $(CORE_OTHER_LIBS); do \
 	  make -C otherlibs/$$i clean; \
 	done
-# HACK: we remove memory.h into memry.h to avoid a name clash with
-# the Android NDK (stdlib.h includes memory.h).
-	cd $(SRC) && mv byterun/memory.h byterun/memry.h
-	cd $(SRC) && find asmrun byterun otherlibs -name "*.[ch]" -print | \
-	xargs sed -i -e 's/"memory.h"/"memry.h"/' -e 's/<memory.h>/<memry.h>/'
-	cd $(SRC) && find . -name ".depend" -print | \
-	xargs sed -i -e 's/memory.h/memry.h/'
 	touch stamp-prepare
 
 stamp-core: stamp-configure
