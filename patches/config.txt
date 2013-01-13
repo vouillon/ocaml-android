@@ -19,7 +19,7 @@
  TK_LINK=
  LIBBFD_LINK=
 -BYTECC=gcc -m32
-+BYTECC=ANDROID_PATH/arm-linux-androideabi-gcc --sysroot $(SYSROOT)
++BYTECC=ANDROID_PATH/arm-linux-androideabi-gcc --sysroot $(SYSROOT) -I $(PREFIX)/include -L $(PREFIX)/lib
  BYTECCCOMPOPTS=-fno-defer-pop -Wall -D_FILE_OFFSET_BITS=64
  BYTECCLINKOPTS=
  BYTECCLIBS= -lm  -ldl  
@@ -35,7 +35,7 @@
  MODEL=armv5te
  SYSTEM=linux_eabi
 -NATIVECC=gcc -m32
-+NATIVECC=ANDROID_PATH/arm-linux-androideabi-gcc --sysroot $(SYSROOT)
++NATIVECC=$(BYTECC)
  NATIVECCCOMPOPTS=-Wall -D_FILE_OFFSET_BITS=64
  NATIVECCPROFOPTS=-Wall -D_FILE_OFFSET_BITS=64
  NATIVECCLINKOPTS=
@@ -44,7 +44,7 @@
 -ASM=as --32
 -ASPP=gcc -m32 -c
 +ASM=ANDROID_PATH/arm-linux-androideabi-as
-+ASPP=ANDROID_PATH/arm-linux-androideabi-gcc -c --sysroot $(SYSROOT)
++ASPP=$(BYTECC) -c
  ASPPPROFFLAGS=-DPROFILING
  PROFILING=prof
  DYNLINKOPTS= -ldl
