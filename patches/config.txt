@@ -21,7 +21,7 @@
 -BYTECC=gcc -m32
 +BYTECC=ANDROID_PATH/arm-linux-androideabi-gcc --sysroot $(SYSROOT) -I $(PREFIX)/include -L $(PREFIX)/lib
  BYTECCCOMPOPTS=-fno-defer-pop -Wall -D_FILE_OFFSET_BITS=64
- BYTECCLINKOPTS=
+ BYTECCLINKOPTS= -Wl,-E
  BYTECCLIBS= -lm  -ldl  
 @@ -31,19 +32,19 @@
  #ml let syslib x = "-l"^x;;
@@ -39,7 +39,7 @@
  NATIVECCCOMPOPTS=-Wall -D_FILE_OFFSET_BITS=64
  NATIVECCPROFOPTS=-Wall -D_FILE_OFFSET_BITS=64
  NATIVECCLINKOPTS=
- NATIVECCRPATH=
+ NATIVECCRPATH=-Wl,-rpath,
  NATIVECCLIBS= -lm  -ldl
 -ASM=as --32
 -ASPP=gcc -m32 -c
@@ -48,6 +48,23 @@
  ASPPPROFFLAGS=-DPROFILING
  PROFILING=prof
  DYNLINKOPTS= -ldl
+@@ -66,12 +67,12 @@
+ EXTRALIBS=
+ CCOMPTYPE=cc
+ TOOLCHAIN=cc
+-NATDYNLINK=true
+-CMXS=cmxs
++NATDYNLINK=false
++CMXS=cmxa
+ MKEXE=$(BYTECC)
+ MKEXEDEBUGFLAG=-g
+-MKDLL=gcc -m32 -shared
+-MKMAINDLL=gcc -m32 -shared
++MKDLL=$(BYTECC) -shared
++MKMAINDLL=$(BYTECC) -shared
+ RUNTIMED=noruntimed
+ CAMLP4=camlp4
+ ASM_CFI_SUPPORTED=true
 --- config/s.h~
 +++ config/s.h
 @@ -43,4 +43,3 @@

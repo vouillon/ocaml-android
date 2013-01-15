@@ -67,7 +67,7 @@ stamp-configure: stamp-copy
 	cd $(SRC) && \
 	./configure -prefix $(ANDROID_PREFIX) -host armv5te-unknown-linux-gnueabi \
 		-cc "gcc -m32" -as "as --32" -aspp "gcc -m32 -c" \
-	 	-no-shared-libs -no-pthread
+	 	-no-pthread
 	touch stamp-configure
 
 stamp-copy:
