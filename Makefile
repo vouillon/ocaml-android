@@ -21,6 +21,8 @@ stamp-install: stamp-build
 	mkdir -p $(ANDROID_PREFIX)/arm-linux-androideabi/bin
 	cd $(SRC) && \
 	cp byterun/ocamlrun.target $(ANDROID_PREFIX)/arm-linux-androideabi/bin/ocamlrun
+	ln -sf $(shell $(ANDROID_BINDIR)/ocamlfind query stdlib)/camlp4 \
+	  $(ANDROID_PREFIX)/lib/ocaml/camlp4
 	touch stamp-install
 
 stamp-build: stamp-runtime
@@ -67,7 +69,7 @@ stamp-configure: stamp-copy
 	cd $(SRC) && \
 	./configure -prefix $(ANDROID_PREFIX) -host armv5te-unknown-linux-gnueabi \
 		-cc "gcc -m32" -as "as --32" -aspp "gcc -m32 -c" \
-	 	-no-pthread
+	 	-no-pthread -no-camlp4
 	touch stamp-configure
 
 stamp-copy:

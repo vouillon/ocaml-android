@@ -63,7 +63,7 @@
 +MKDLL=$(BYTECC) -shared
 +MKMAINDLL=$(BYTECC) -shared
  RUNTIMED=noruntimed
- CAMLP4=camlp4
+ CAMLP4=
  ASM_CFI_SUPPORTED=true
 --- config/s.h~
 +++ config/s.h
