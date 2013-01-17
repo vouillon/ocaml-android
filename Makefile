@@ -70,6 +70,7 @@ stamp-configure: stamp-copy
 	cd $(SRC) && \
 	./configure -prefix $(ANDROID_PREFIX) \
 		-bindir $(ANDROID_BINDIR)/arm-linux-androideabi \
+	        -mandir $(shell pwd)/no-man \
 		-host armv5te-unknown-linux-gnueabi \
 		-cc "gcc -m32" -as "as --32" -aspp "gcc -m32 -c" \
 	 	-no-pthread -no-camlp4
