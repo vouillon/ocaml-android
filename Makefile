@@ -22,6 +22,7 @@ stamp-install: stamp-build
 	cd $(SRC) && \
 	cp byterun/ocamlrun.target $(ANDROID_PREFIX)/bin/ocamlrun
 # Add a link to camlp4 libraries
+	rm -rf $(ANDROID_PREFIX)/lib/ocaml/camlp4
 	ln -sf $(shell $(ANDROID_BINDIR)/ocamlfind query stdlib)/camlp4 \
 	  $(ANDROID_PREFIX)/lib/ocaml/camlp4
 	touch stamp-install
