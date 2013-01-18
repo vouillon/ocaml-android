@@ -7,6 +7,8 @@ ARCH=$(shell uname | tr A-Z a-z)
 ANDROID_PATH = $(ANDROID_NDK)/toolchains/arm-linux-androideabi-4.7/prebuilt/$(ARCH)-x86/bin
 
 CORE_OTHER_LIBS = unix str num dynlink
+STDLIB=$(shell $(ANDROID_BINDIR)/ocamlc -config | \
+               sed -n 's/standard_library: \(.*\)/\1/p')
 
 all: stamp-install
 
@@ -21,8 +23,7 @@ stamp-install: stamp-build
 	mkdir -p $(ANDROID_PREFIX)/arm-linux-androideabi/bin
 	cd $(SRC) && \
 	cp byterun/ocamlrun.target $(ANDROID_PREFIX)/arm-linux-androideabi/bin/ocamlrun
-	ln -sf $(shell $(ANDROID_BINDIR)/ocamlfind query stdlib)/camlp4 \
-	  $(ANDROID_PREFIX)/lib/ocaml/camlp4
+	ln -sf $(STDLIB)/camlp4 $(ANDROID_PREFIX)/lib/ocaml/camlp4
 	touch stamp-install
 
 stamp-build: stamp-runtime
@@ -80,6 +81,11 @@ stamp-copy:
 	fi
 	@if ! [ -d $(ANDROID_PATH) ]; then \
 	  echo Error: Android NDK not found. Check ANDROID_NDK variable.; \
+	  exit 1; \
+	fi
+	@if ! [ -f $(ANDROID_BINDIR)/ocamlc ]; then \
+	  echo Error: $(ANDROID_BINDIR)/ocamlc not found. \
+	    Check ANDROID_BINDIR variable.; \
 	  exit 1; \
 	fi
 	cp -a $(OCAML_SRC) $(SRC)
