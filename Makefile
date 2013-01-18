@@ -16,13 +16,15 @@ stamp-install: stamp-build
 # Install the compiler
 	cd $(SRC) && make install
 # Put links to binaries in $ANDROID_BINDIR
-	for i in $(ANDROID_PREFIX)/bin/*; do \
+	for i in $(ANDROID_BINDIR)/arm-linux-androideabi/*; do \
 	  ln -sf $$i $(ANDROID_BINDIR)/arm-linux-androideabi-`basename $$i`; \
 	done
 # Install the Android ocamlrun binary
-	mkdir -p $(ANDROID_PREFIX)/arm-linux-androideabi/bin
+	mkdir -p $(ANDROID_PREFIX)/bin
 	cd $(SRC) && \
-	cp byterun/ocamlrun.target $(ANDROID_PREFIX)/arm-linux-androideabi/bin/ocamlrun
+	cp byterun/ocamlrun.target $(ANDROID_PREFIX)/bin/ocamlrun
+# Add a link to camlp4 libraries
+	rm -rf $(ANDROID_PREFIX)/lib/ocaml/camlp4
 	ln -sf $(STDLIB)/camlp4 $(ANDROID_PREFIX)/lib/ocaml/camlp4
 	touch stamp-install
 
@@ -68,7 +70,10 @@ stamp-core: stamp-configure
 stamp-configure: stamp-copy
 # Configuration...
 	cd $(SRC) && \
-	./configure -prefix $(ANDROID_PREFIX) -host armv5te-unknown-linux-gnueabi \
+	./configure -prefix $(ANDROID_PREFIX) \
+		-bindir $(ANDROID_BINDIR)/arm-linux-androideabi \
+	        -mandir $(shell pwd)/no-man \
+		-host armv5te-unknown-linux-gnueabi \
 		-cc "gcc -m32" -as "as --32" -aspp "gcc -m32 -c" \
 	 	-no-pthread -no-camlp4
 	touch stamp-configure
