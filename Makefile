@@ -44,12 +44,17 @@ stamp-runtime: stamp-prepare
 	touch stamp-runtime
 
 stamp-prepare: stamp-core
+# Update configuration files
+	set -e; cd config; for f in *; do \
+	  sed -e 's%ANDROID_NDK%$(ANDROID_NDK)%' \
+	      -e 's%ANDROID_PATH%$(ANDROID_PATH)%g' \
+	      -e 's%ANDROID_PREFIX%$(ANDROID_PREFIX)%g' \
+	      -e 's%ANDROID_BINDIR%$(ANDROID_BINDIR)%g' \
+	      $$f > ../$(SRC)/config/$$f; \
+	done
 # Apply patches
 	set -e; for p in patches/*.txt; do \
-	(cd $(SRC) && \
-	 sed -e 's%ANDROID_NDK%$(ANDROID_NDK)%' \
-	     -e 's%ANDROID_PATH%$(ANDROID_PATH)%g' ../$$p | \
-	 patch -p 0); \
+	(cd $(SRC) && patch -p 0 < ../$$p); \
 	done
 # Save the ocamlrun binary for the local machine
 	cd $(SRC) && cp byterun/ocamlrun byterun/ocamlrun.local
