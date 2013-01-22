@@ -3,11 +3,8 @@ ocaml-android
 
 Ocaml cross-compiler for Android.
 
-Currently, only Linux is supported, but it should not be too difficult
-to make it run under Mac OS X (contributions are welcome).
-
 On a 64bit Debian or Ubuntu installation, you need to install package
-`gcc-multilib`: we have to use 32 bit OCaml binaries when targeting
+`gcc-multilib`: we have to build 32 bit OCaml binaries when targeting
 32 bit architectures.
 
 Follow the following steps to compile:

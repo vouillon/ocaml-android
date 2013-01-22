@@ -69,7 +69,8 @@ stamp-prepare: stamp-core
 
 stamp-core: stamp-configure
 # Build the bytecode compiler and other core tools
-	cd $(SRC) && make OTHERLIBRARIES="$(CORE_OTHER_LIBS)" world
+	cd $(SRC) && \
+	make OTHERLIBRARIES="$(CORE_OTHER_LIBS)" BNG_ASM_LEVEL=0 world
 	touch stamp-core
 
 stamp-configure: stamp-copy
@@ -78,8 +79,7 @@ stamp-configure: stamp-copy
 	./configure -prefix $(ANDROID_PREFIX) \
 		-bindir $(ANDROID_BINDIR)/arm-linux-androideabi \
 	        -mandir $(shell pwd)/no-man \
-		-host armv5te-unknown-linux-gnueabi \
-		-cc "gcc -m32" -as "as --32" -aspp "gcc -m32 -c" \
+		-cc "gcc -m32" -as "gcc -m32" -aspp "gcc -m32 -c" \
 	 	-no-pthread -no-camlp4
 	touch stamp-configure
 
