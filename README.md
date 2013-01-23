@@ -29,4 +29,4 @@ programs that uses libraries with mixed C / OCaml code. Shared
 libraries should eventually be disabled, but at the moment, the
 `ocamlbuild` plugin of `oasis` requires them to be created.
 
-Many thanks to Keigo Imai for its OCaml 3.12 cross-compiler patches.
+Many thanks to Keigo Imai for his OCaml 3.12 cross-compiler patches.
