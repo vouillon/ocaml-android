@@ -50,6 +50,7 @@ stamp-prepare: stamp-core
 	      -e 's%ANDROID_PATH%$(ANDROID_PATH)%g' \
 	      -e 's%ANDROID_PREFIX%$(ANDROID_PREFIX)%g' \
 	      -e 's%ANDROID_BINDIR%$(ANDROID_BINDIR)%g' \
+	      -e 's%OCAML_SRC%$(OCAML_SRC)%g' \
 	      $$f > ../$(SRC)/config/$$f; \
 	done
 # Apply patches
