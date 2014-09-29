@@ -4,7 +4,7 @@ include Makefile.config
 SRC = ocaml-src
 
 ARCH=$(shell uname | tr A-Z a-z)
-ANDROID_PATH = $(ANDROID_NDK)/toolchains/arm-linux-androideabi-4.7/prebuilt/$(ARCH)-x86/bin
+ANDROID_PATH = $(ANDROID_NDK)/toolchains/arm-linux-androideabi-4.8/prebuilt/$(ARCH)-x86/bin
 
 CORE_OTHER_LIBS = unix str num dynlink
 STDLIB=$(shell $(ANDROID_BINDIR)/ocamlc -config | \
@@ -81,7 +81,7 @@ stamp-configure: stamp-copy
 		-bindir $(ANDROID_BINDIR)/arm-linux-androideabi \
 	        -mandir $(shell pwd)/no-man \
 		-cc "gcc -m32" -as "gcc -m32" -aspp "gcc -m32 -c" \
-	 	-no-pthread -no-camlp4
+	 	-no-pthread
 	touch stamp-configure
 
 stamp-copy:
