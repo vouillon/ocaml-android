@@ -16,6 +16,8 @@ stamp-install: stamp-build
 # Install the compiler
 	cd $(SRC) && make install
 # Put links to binaries in $ANDROID_BINDIR
+	rm $(ANDROID_BINDIR)/arm-linux-androideabi/ocamlbuild
+	rm $(ANDROID_BINDIR)/arm-linux-androideabi/ocamlbuild.byte
 	for i in $(ANDROID_BINDIR)/arm-linux-androideabi/*; do \
 	  ln -sf $$i $(ANDROID_BINDIR)/arm-linux-androideabi-`basename $$i`; \
 	done
