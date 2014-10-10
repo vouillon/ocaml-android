@@ -16,11 +16,11 @@ X11_INCLUDES=not found
 X11_LINK=not found
 TK_DEFS=
 TK_LINK=
-LIBBFD_LINK=
+LIBBFD_LINK=-march=armv7-a -Wl,--fix-cortex-a8 -Wl,--no-warn-mismatch
 BYTECC=ANDROID_PATH/arm-linux-androideabi-gcc --sysroot $(SYSROOT) -I $(PREFIX)/include -L $(PREFIX)/lib -O2
-BYTECCCOMPOPTS=-fno-defer-pop -Wall -D_FILE_OFFSET_BITS=64
-BYTECCLINKOPTS= -Wl,-E
-BYTECCLIBS= -lm  -ldl  
+BYTECCCOMPOPTS=-fno-defer-pop -Wall -D_FILE_OFFSET_BITS=64 -march=armv7-a -mfpu=vfpv3-d16 -mhard-float -D_NDK_MATH_NO_SOFTFP=1
+BYTECCLINKOPTS= -Wl,-E -march=armv7-a -Wl,--fix-cortex-a8 -Wl,--no-warn-mismatch
+BYTECCLIBS= -lm_hard  -ldl
 BYTECCRPATH=-Wl,-rpath,
 EXE=
 SUPPORTS_SHARED_LIBRARIES=true
@@ -34,14 +34,14 @@ SYSLIB=-l$(1)
 MKLIB=ANDROID_PATH/arm-linux-androideabi-ar rc $(1) $(2); ANDROID_PATH/arm-linux-androideabi-ranlib $(1)
 #ml let mklib out files opts = Printf.sprintf "ANDROID_PATH/arm-linux-androideabi-ar rc %s %s %s; ANDROID_PATH/arm-linux-androideabi-ranlib %s" out opts files out;;
 ARCH=arm
-MODEL=armv5te
-SYSTEM=linux_eabi
+MODEL=armv7
+SYSTEM=linux_eabihf
 NATIVECC=$(BYTECC)
-NATIVECCCOMPOPTS=-Wall -D_FILE_OFFSET_BITS=64
-NATIVECCPROFOPTS=-Wall -D_FILE_OFFSET_BITS=64
-NATIVECCLINKOPTS=
+NATIVECCCOMPOPTS=-Wall -D_FILE_OFFSET_BITS=64 -march=armv7-a -mfpu=vfpv3-d16 -mhard-float -D_NDK_MATH_NO_SOFTFP=1
+NATIVECCPROFOPTS=$(NATIVECCCOMPOPTS)
+NATIVECCLINKOPTS=-march=armv7-a -Wl,--fix-cortex-a8 -Wl,--no-warn-mismatch
 NATIVECCRPATH=-Wl,-rpath,
-NATIVECCLIBS= -lm  -ldl
+NATIVECCLIBS= -lm_hard  -ldl
 ASM=ANDROID_PATH/arm-linux-androideabi-as
 ASPP=$(BYTECC) -c
 ASPPPROFFLAGS=-DPROFILING
@@ -67,10 +67,10 @@ CCOMPTYPE=cc
 TOOLCHAIN=cc
 NATDYNLINK=false
 CMXS=cmxa
-MKEXE=$(BYTECC)
+MKEXE=$(BYTECC) -march=armv7-a -Wl,--fix-cortex-a8 -Wl,--no-warn-mismatch
 MKEXEDEBUGFLAG=-g
-MKDLL=$(BYTECC) -shared
-MKMAINDLL=$(BYTECC) -shared
+MKDLL=$(BYTECC) -shared -march=armv7-a -Wl,--fix-cortex-a8 -Wl,--no-warn-mismatch
+MKMAINDLL=$(MKDLL)
 RUNTIMED=noruntimed
 CAMLP4=
 ASM_CFI_SUPPORTED=false
