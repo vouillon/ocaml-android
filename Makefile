@@ -1,10 +1,44 @@
 
 include Makefile.config
 
+TOOLCHAIN = $(HOST_ARCH)-4.8
+ANDROID_OCAML_ARCH = $(ANDROID_ARCH)
+ifeq ($(ABI),armeabi-v7a)
+  HOST_ARCH = arm-linux-androideabi
+  ANDROID_ARCH = arm
+  ANDROID_MODEL = armv7
+  ANDROID_SYSTEM = linux_eabihf
+else ifeq ($(ABI),armeabi)
+  HOST_ARCH = arm-linux-androideabi
+  ANDROID_ARCH = arm
+  ANDROID_MODEL = armv5te
+  ANDROID_SYSTEM = linux_eabi
+else ifeq ($(ABI),x86)
+  HOST_ARCH = i686-linux-android
+  TOOLCHAIN = x86-4.8
+  ANDROID_ARCH = x86
+  ANDROID_OCAML_ARCH = i386
+  ANDROID_MODEL = default
+  ANDROID_SYSTEM = linux_elf
+else
+  $(error Unknown ABI $(ABI))
+endif
+
+ifeq ($(ABI),armeabi-v7a)
+  ANDROID_CFLAGS = -march=armv7-a -mfpu=vfpv3-d16 -mhard-float \
+                   -D_NDK_MATH_NO_SOFTFP=1
+  ANDROID_LDFLAGS = -march=armv7-a -Wl,--fix-cortex-a8 -Wl,--no-warn-mismatch
+  ANDROID_MATHLIB = -lm_hard
+else
+  ANDROID_CFLAGS =
+  ANDROID_LDFLAGS =
+  ANDROID_MATHLIB = -lm
+endif
+
 SRC = ocaml-src
 
 ARCH=$(shell uname | tr A-Z a-z)
-ANDROID_PATH = $(ANDROID_NDK)/toolchains/arm-linux-androideabi-4.8/prebuilt/$(ARCH)-x86/bin
+ANDROID_PATH = $(ANDROID_NDK)/toolchains/$(TOOLCHAIN)/prebuilt/$(ARCH)-x86/bin
 
 CORE_OTHER_LIBS = unix str num dynlink
 STDLIB=$(shell $(ANDROID_BINDIR)/ocamlc -config | \
@@ -16,10 +50,10 @@ stamp-install: stamp-build
 # Install the compiler
 	cd $(SRC) && make install
 # Put links to binaries in $ANDROID_BINDIR
-	rm -f $(ANDROID_BINDIR)/arm-linux-androideabi/ocamlbuild
-	rm -f $(ANDROID_BINDIR)/arm-linux-androideabi/ocamlbuild.byte
-	for i in $(ANDROID_BINDIR)/arm-linux-androideabi/*; do \
-	  ln -sf $$i $(ANDROID_BINDIR)/arm-linux-androideabi-`basename $$i`; \
+	rm -f $(ANDROID_BINDIR)/$(HOST_ARCH)/ocamlbuild
+	rm -f $(ANDROID_BINDIR)/$(HOST_ARCH)/ocamlbuild.byte
+	for i in $(ANDROID_BINDIR)/$(HOST_ARCH)/*; do \
+	  ln -sf $$i $(ANDROID_BINDIR)/$(HOST_ARCH)-`basename $$i`; \
 	done
 # Install the Android ocamlrun binary
 	mkdir -p $(ANDROID_PREFIX)/bin
@@ -53,6 +87,15 @@ stamp-prepare: stamp-core
 	      -e 's%ANDROID_PREFIX%$(ANDROID_PREFIX)%g' \
 	      -e 's%ANDROID_BINDIR%$(ANDROID_BINDIR)%g' \
 	      -e 's%OCAML_SRC%$(OCAML_SRC)%g' \
+	      -e 's%HOST_ARCH%$(HOST_ARCH)%g' \
+	      -e 's%ANDROID_CFLAGS%$(ANDROID_CFLAGS)%g' \
+	      -e 's%ANDROID_LDFLAGS%$(ANDROID_LDFLAGS)%g' \
+	      -e 's%ANDROID_MATHLIB%$(ANDROID_MATHLIB)%g' \
+	      -e 's%ANDROID_ARCH%$(ANDROID_ARCH)%g' \
+	      -e 's%ANDROID_OCAML_ARCH%$(ANDROID_OCAML_ARCH)%g' \
+	      -e 's%ANDROID_MODEL%$(ANDROID_MODEL)%g' \
+	      -e 's%ANDROID_SYSTEM%$(ANDROID_SYSTEM)%g' \
+	      -e 's%ANDROID_PLATFORM%$(ANDROID_PLATFORM)%g' \
 	      $$f > ../$(SRC)/config/$$f; \
 	done
 # Apply patches
@@ -80,7 +123,7 @@ stamp-configure: stamp-copy
 # Configuration...
 	cd $(SRC) && \
 	./configure -prefix $(ANDROID_PREFIX) \
-		-bindir $(ANDROID_BINDIR)/arm-linux-androideabi \
+		-bindir $(ANDROID_BINDIR)/$(HOST_ARCH) \
 	        -mandir $(shell pwd)/no-man \
 		-cc "gcc -m32" -as "gcc -m32 -c" -aspp "gcc -m32 -c" \
 		-no-pthread

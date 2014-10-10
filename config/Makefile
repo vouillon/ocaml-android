@@ -1,24 +1,24 @@
 PREFIX=ANDROID_PREFIX
-BINDIR=ANDROID_BINDIR/arm-linux-androideabi
+BINDIR=ANDROID_BINDIR/HOST_ARCH
 LIBDIR=$(PREFIX)/lib/ocaml
 STUBLIBDIR=$(LIBDIR)/stublibs
 MANDIR=OCAML_SRC/no-man
 MANEXT=1
-SYSROOT=ANDROID_NDK/platforms/android-14/arch-arm
-RANLIB=ANDROID_PATH/arm-linux-androideabi-ranlib
-RANLIBCMD=ANDROID_PATH/arm-linux-androideabi-ranlib
-ARCMD=ANDROID_PATH/arm-linux-androideabi-ar
+SYSROOT=ANDROID_NDK/platforms/ANDROID_PLATFORM/arch-ANDROID_ARCH
+RANLIB=ANDROID_PATH/HOST_ARCH-ranlib
+RANLIBCMD=ANDROID_PATH/HOST_ARCH-ranlib
+ARCMD=ANDROID_PATH/HOST_ARCH-ar
 SHARPBANGSCRIPTS=true
 BNG_ARCH=generic
 BNG_ASM_LEVEL=0
 PTHREAD_LINK=
 X11_INCLUDES=not found
 X11_LINK=not found
-LIBBFD_LINK=-march=armv7-a -Wl,--fix-cortex-a8 -Wl,--no-warn-mismatch
-BYTECC=ANDROID_PATH/arm-linux-androideabi-gcc --sysroot $(SYSROOT) -I $(PREFIX)/include -L $(PREFIX)/lib -O2
-BYTECCCOMPOPTS=-fno-defer-pop -Wall -D_FILE_OFFSET_BITS=64 -march=armv7-a -mfpu=vfpv3-d16 -mhard-float -D_NDK_MATH_NO_SOFTFP=1
-BYTECCLINKOPTS= -Wl,-E -march=armv7-a -Wl,--fix-cortex-a8 -Wl,--no-warn-mismatch
-BYTECCLIBS= -lm_hard  -ldl
+LIBBFD_LINK=ANDROID_LDFLAGS
+BYTECC=ANDROID_PATH/HOST_ARCH-gcc --sysroot $(SYSROOT) -I $(PREFIX)/include -L $(PREFIX)/lib -O2
+BYTECCCOMPOPTS=-fno-defer-pop -Wall -D_FILE_OFFSET_BITS=64 ANDROID_CFLAGS
+BYTECCLINKOPTS=-Wl,-E ANDROID_LDFLAGS
+BYTECCLIBS=ANDROID_MATHLIB -ldl
 BYTECCRPATH=-Wl,-rpath,
 EXE=
 SUPPORTS_SHARED_LIBRARIES=true
@@ -29,18 +29,18 @@ SYSLIB=-l$(1)
 #ml let syslib x = "-l"^x;;
 
 ### How to build a static library
-MKLIB=ANDROID_PATH/arm-linux-androideabi-ar rc $(1) $(2); ANDROID_PATH/arm-linux-androideabi-ranlib $(1)
-#ml let mklib out files opts = Printf.sprintf "ANDROID_PATH/arm-linux-androideabi-ar rc %s %s %s; ANDROID_PATH/arm-linux-androideabi-ranlib %s" out opts files out;;
-ARCH=arm
-MODEL=armv7
-SYSTEM=linux_eabihf
+MKLIB=ANDROID_PATH/HOST_ARCH-ar rc $(1) $(2); ANDROID_PATH/HOST_ARCH-ranlib $(1)
+#ml let mklib out files opts = Printf.sprintf "ANDROID_PATH/HOST_ARCH-ar rc %s %s %s; ANDROID_PATH/HOST_ARCH-ranlib %s" out opts files out;;
+ARCH=ANDROID_OCAML_ARCH
+MODEL=ANDROID_MODEL
+SYSTEM=ANDROID_SYSTEM
 NATIVECC=$(BYTECC)
-NATIVECCCOMPOPTS=-Wall -D_FILE_OFFSET_BITS=64 -march=armv7-a -mfpu=vfpv3-d16 -mhard-float -D_NDK_MATH_NO_SOFTFP=1
+NATIVECCCOMPOPTS=-Wall -D_FILE_OFFSET_BITS=64 ANDROID_CFLAGS
 NATIVECCPROFOPTS=$(NATIVECCCOMPOPTS)
-NATIVECCLINKOPTS=-march=armv7-a -Wl,--fix-cortex-a8 -Wl,--no-warn-mismatch
+NATIVECCLINKOPTS=ANDROID_LDFLAGS
 NATIVECCRPATH=-Wl,-rpath,
-NATIVECCLIBS= -lm_hard  -ldl
-ASM=ANDROID_PATH/arm-linux-androideabi-as
+NATIVECCLIBS=ANDROID_MATHLIB -ldl
+ASM=ANDROID_PATH/HOST_ARCH-as
 ASPP=$(BYTECC) -c
 ASPPPROFFLAGS=-DPROFILING
 PROFILING=prof
@@ -48,7 +48,7 @@ DYNLINKOPTS= -ldl
 OTHERLIBRARIES=unix str num dynlink bigarray threads
 CC_PROFILE=-pg
 SYSTHREAD_SUPPORT=false
-PARTIALLD=ANDROID_PATH/arm-linux-androideabi-ld -r
+PARTIALLD=ANDROID_PATH/HOST_ARCH-ld -r
 PACKLD=$(PARTIALLD) $(NATIVECCLINKOPTS) -o\ 
 DLLCCCOMPOPTS=
 IFLEXDIR=
@@ -64,9 +64,9 @@ CCOMPTYPE=cc
 TOOLCHAIN=cc
 NATDYNLINK=false
 CMXS=cmxa
-MKEXE=$(BYTECC) -march=armv7-a -Wl,--fix-cortex-a8 -Wl,--no-warn-mismatch
+MKEXE=$(BYTECC) ANDROID_LDFLAGS
 MKEXEDEBUGFLAG=-g
-MKDLL=$(BYTECC) -shared -march=armv7-a -Wl,--fix-cortex-a8 -Wl,--no-warn-mismatch
+MKDLL=$(BYTECC) -shared ANDROID_LDFLAGS
 MKMAINDLL=$(MKDLL)
 RUNTIMED=noruntimed
 ASM_CFI_SUPPORTED=false
@@ -78,8 +78,8 @@ GRAPHLIB=
 WITH_DEBUGGER=
 WITH_OCAMLDOC=
 WITH_OCAMLBUILD=
-TARGET=arm-linux-androideabi
-HOST=arm-linux-androideabi
+TARGET=HOST_ARCH
+HOST=HOST_ARCH
 # No longer used in OCaml 4.02
 TK_DEFS=
 TK_LINK=
