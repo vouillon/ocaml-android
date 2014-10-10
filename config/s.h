@@ -44,3 +44,5 @@
 #define HAS_MMAP
 #define HAS_PWRITE
 #define HAS_GETHOSTBYNAME_R 6
+/* New to OCaml 4.02 */
+#define HAS_MKSTEMP

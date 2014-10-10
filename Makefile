@@ -16,8 +16,8 @@ stamp-install: stamp-build
 # Install the compiler
 	cd $(SRC) && make install
 # Put links to binaries in $ANDROID_BINDIR
-	rm $(ANDROID_BINDIR)/arm-linux-androideabi/ocamlbuild
-	rm $(ANDROID_BINDIR)/arm-linux-androideabi/ocamlbuild.byte
+	rm -f $(ANDROID_BINDIR)/arm-linux-androideabi/ocamlbuild
+	rm -f $(ANDROID_BINDIR)/arm-linux-androideabi/ocamlbuild.byte
 	for i in $(ANDROID_BINDIR)/arm-linux-androideabi/*; do \
 	  ln -sf $$i $(ANDROID_BINDIR)/arm-linux-androideabi-`basename $$i`; \
 	done
@@ -82,8 +82,9 @@ stamp-configure: stamp-copy
 	./configure -prefix $(ANDROID_PREFIX) \
 		-bindir $(ANDROID_BINDIR)/arm-linux-androideabi \
 	        -mandir $(shell pwd)/no-man \
-		-cc "gcc -m32" -as "gcc -m32" -aspp "gcc -m32 -c" \
-	 	-no-pthread -no-camlp4
+		-cc "gcc -m32" -as "gcc -m32 -c" -aspp "gcc -m32 -c" \
+		-no-pthread
+	sed -i s/CAMLP4=camlp4/CAMLP4=/ $(SRC)/config/Makefile
 	touch stamp-configure
 
 stamp-copy:

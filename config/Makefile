@@ -14,8 +14,6 @@ BNG_ASM_LEVEL=0
 PTHREAD_LINK=
 X11_INCLUDES=not found
 X11_LINK=not found
-TK_DEFS=
-TK_LINK=
 LIBBFD_LINK=-march=armv7-a -Wl,--fix-cortex-a8 -Wl,--no-warn-mismatch
 BYTECC=ANDROID_PATH/arm-linux-androideabi-gcc --sysroot $(SYSROOT) -I $(PREFIX)/include -L $(PREFIX)/lib -O2
 BYTECCCOMPOPTS=-fno-defer-pop -Wall -D_FILE_OFFSET_BITS=64 -march=armv7-a -mfpu=vfpv3-d16 -mhard-float -D_NDK_MATH_NO_SOFTFP=1
@@ -48,7 +46,6 @@ ASPPPROFFLAGS=-DPROFILING
 PROFILING=prof
 DYNLINKOPTS= -ldl
 OTHERLIBRARIES=unix str num dynlink bigarray threads
-DEBUGGER=ocamldebugger
 CC_PROFILE=-pg
 SYSTHREAD_SUPPORT=false
 PARTIALLD=ld -r
@@ -72,6 +69,19 @@ MKEXEDEBUGFLAG=-g
 MKDLL=$(BYTECC) -shared -march=armv7-a -Wl,--fix-cortex-a8 -Wl,--no-warn-mismatch
 MKMAINDLL=$(MKDLL)
 RUNTIMED=noruntimed
-CAMLP4=
 ASM_CFI_SUPPORTED=false
 WITH_FRAME_POINTERS=false
+# New to OCaml 4.02
+UNIX_OR_WIN32=unix
+UNIXLIB=unix
+GRAPHLIB=
+WITH_DEBUGGER=
+WITH_OCAMLDOC=
+WITH_OCAMLBUILD=
+TARGET=arm-linux-androideabi
+HOST=arm-linux-androideabi
+# No longer used in OCaml 4.02
+TK_DEFS=
+TK_LINK=
+DEBUGGER=ocamldebugger
+CAMLP4=
